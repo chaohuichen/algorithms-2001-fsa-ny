@@ -9,91 +9,85 @@ import {
   Legend,
 } from 'recharts';
 import Button from '@material-ui/core/Button';
+
+const sleep = (milliseconds) => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
 class SortingEffect extends React.Component {
   constructor() {
     super();
     this.state = {
       data: [
         {
-          name: 'Page B',
-          uv: 3000,
-          pv: 1398,
-        },
-        {
-          name: 'Page C',
-          uv: 2000,
-          pv: 9800,
-        },
-        {
-          name: 'Page D',
-          uv: 2780,
-          pv: 3908,
-        },
-        {
-          name: 'Page E',
-          uv: 1890,
-          pv: 4800,
-        },
-        {
-          name: 'Page F',
-          uv: 2390,
-          pv: 3800,
-        },
-        {
-          name: 'Page G',
-          uv: 3490,
-          pv: 4300,
-        },
-        {
-          name: 'Page A',
+          name: '4000',
           uv: 4000,
-          pv: 2400,
+        },
+        {
+          name: '3000',
+          uv: 3000,
+        },
+        {
+          name: '2000',
+          uv: 2000,
+        },
+        {
+          name: '1000',
+          uv: 1000,
+        },
+        {
+          name: '5000',
+          uv: 8000,
+        },
+        {
+          name: '5000',
+          uv: 400,
+        },
+        {
+          name: '5000',
+          uv: 2323,
+        },
+        {
+          name: '5000',
+          uv: 4222,
+        },
+        {
+          name: '5000',
+          uv: 900,
         },
       ],
     };
     this.changedata = this.changedata.bind(this);
+    this.dataChanged = this.dataChanged.bind(this);
+    this.bubbleSort = this.bubbleSort.bind(this);
+  }
+
+  async bubbleSort(array) {
+    for (let i = 0; i < array.length; ++i) {
+      for (let j = i; j < array.length - 1; ++j) {
+        if (array[i].uv > array[j + 1].uv) {
+          let temp = array[i].uv;
+          array[i].uv = array[j + 1].uv;
+          array[i].name = '' + array[j + 1].uv;
+          array[j + 1].uv = temp;
+          array[j + 1].name = '' + temp;
+          this.setState({ data: Array.from(array) });
+          console.log('changing!', i);
+          await sleep(2000);
+        }
+      }
+    }
+  }
+  dataChanged(data) {
+    this.setState({
+      data: data,
+    });
+    console.log('the state', this.state.data);
   }
   changedata(e) {
     e.preventDefault();
-    this.setState({
-      data: [
-        {
-          name: 'Page A',
-          uv: 4000,
-          pv: 2400,
-        },
-        {
-          name: 'Page B',
-          uv: 3000,
-          pv: 1398,
-        },
-        {
-          name: 'Page C',
-          uv: 2000,
-          pv: 9800,
-        },
-        {
-          name: 'Page D',
-          uv: 2780,
-          pv: 3908,
-        },
-        {
-          name: 'Page E',
-          uv: 1890,
-          pv: 4800,
-        },
-        {
-          name: 'Page F',
-          uv: 2390,
-          pv: 3800,
-        },
-        {
-          name: 'Page G',
-          uv: 3490,
-          pv: 4300,
-        },
-      ],
-    });
+    let array = this.state.data;
+    this.bubbleSort(array);
+    // this.dataChanged(array);
     console.log('click!');
   }
   render() {
@@ -105,8 +99,7 @@ class SortingEffect extends React.Component {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey='pv' fill='#8884d8' />
-          <Bar dataKey='uv' fill='#82ca9d' />
+          <Bar dataKey='uv' fill='#8884d8' />
         </BarChart>
         <Button onClick={(e) => this.changedata(e)}>Hello World</Button>
       </div>
